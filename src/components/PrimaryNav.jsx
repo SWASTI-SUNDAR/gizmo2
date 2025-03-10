@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaMagnet, FaTint, FaCubes, FaChartBar, FaBolt } from "react-icons/fa";
+import {
+  FaFire,
+  FaSnowflake,
+  FaFlask,
+  FaChartBar,
+} from "react-icons/fa";
 
 function Navbar() {
   const location = useLocation();
@@ -38,28 +43,24 @@ function Navbar() {
           {/* Left Section */}
           <div className="flex gap-0 xl:gap-6 items-center text-white">
             <Link to="/" className="text-xl font-bold text-yellow-400">
-              Labby's Labs : Material Properties Explorer
+              Labby's Labs : Matter Conservation Explorer
             </Link>
           </div>
           {/* Navigation Buttons */}
           <div
             className={`gap-2 ${location.pathname === "/" ? "hidden" : "flex"}`}
           >
-            <NavButton
-              to="/conductivity"
-              icon={<FaBolt />}
-              label="Conductivity"
-            />
+            <NavButton to="/conductivity" icon={<FaFire />} label="Heating" />
             <NavButton
               to="/magnetisim"
-              icon={<FaMagnet />}
-              label="Magnetisim"
+              icon={<FaSnowflake />}
+              label="Cooling"
             />
-            <NavButton to="/dissolving" icon={<FaCubes />} label="Solubility" />
+            <NavButton to="/dissolving" icon={<FaFlask />} label="Mixing" />
             <NavButton
               to="/result"
               icon={<FaChartBar />}
-              label="Result"
+              label="Results"
               disabled={!allVisited}
             />
           </div>

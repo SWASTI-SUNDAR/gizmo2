@@ -36,92 +36,15 @@
   }
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+/* // Add your custom styles here */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --input: 214.3 31.8% 91.4%;
-
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --input: 217.2 32.6% 17.5%;
-
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
-
-@keyframes pulse {
+@keyframes float {
   0% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.8;
+    transform: translateY(0);
+    opacity: 0.5;
   }
   100% {
-    opacity: 0.2;
+    transform: translateY(-100px);
+    opacity: 0;
   }
 }
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: translateX(-5px);
-  }
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translateX(5px);
-  }
-}
-.animate-shake {
-  animation: shake 0.5s infinite;
-}
-
-@keyframes particleMove {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-10px);
-  }
-}
-
