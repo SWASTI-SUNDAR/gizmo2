@@ -3,8 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import Dissolving from "./pages/Dissolving";
 import Result from "./pages/Result";
-import ElectricalConductivityTester from "./pages/ElectricalConductivity";
 import MagneticPropertiesLab from "./pages/Testing";
+import HeatingSimulation from "./pages/Heating";
 function App() {
   return (
     <>
@@ -12,10 +12,9 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/conductivity"
-            element={<ElectricalConductivityTester />}
-          />
+          import ElectricalConductivityTester from
+          "./pages/ElectricalConductivity";
+          <Route path="/conductivity" element={<HeatingSimulation />} />
           <Route path="/magnetisim" element={<MagneticPropertiesLab />} />
           <Route path="/dissolving" element={<Dissolving />} />
           <Route path="/result" element={<Result />} />
