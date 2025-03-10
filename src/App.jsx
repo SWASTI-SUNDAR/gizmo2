@@ -2,9 +2,9 @@ import Navbar from "./components/PrimaryNav";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import Result from "./pages/Result";
-import MagneticPropertiesLab from "./pages/Testing";
 import HeatingSimulation from "./pages/Heating";
-import LabysLabCoolingSubstances from "./pages/Mixing";
+import LabysLabCoolingSubstances from "./pages/Cooling";
+import MixingSubstancesLab from "./pages/Mixing";
 function App() {
   return (
     <>
@@ -15,7 +15,7 @@ function App() {
           import ElectricalConductivityTester from
           "./pages/ElectricalConductivity";
           <Route path="/conductivity" element={<HeatingSimulation />} />
-          <Route path="/magnetisim" element={<MagneticPropertiesLab />} />
+          <Route path="/magnetisim" element={<MixingSubstancesLab />} />
           <Route path="/dissolving" element={<LabysLabCoolingSubstances />} />
           <Route path="/result" element={<Result />} />
         </Routes>
