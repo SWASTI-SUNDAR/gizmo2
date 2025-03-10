@@ -550,7 +550,6 @@ const HeatingSubstancesSimulation = () => {
           <div className="absolute bottom- left-0 right-0 mx-auto flex flex-col items-center">
             <img src="digital-meter.png" className="h-24 " alt="" />
           </div>
-
           {/* Heat effect */}
           {isHeating && (
             <div className="absolute -bottom-3 left-0 right-0 flex justify-center">

@@ -1,10 +1,10 @@
 import Navbar from "./components/PrimaryNav";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
-import Dissolving from "./pages/Dissolving";
 import Result from "./pages/Result";
 import MagneticPropertiesLab from "./pages/Testing";
 import HeatingSimulation from "./pages/Heating";
+import LabysLabCoolingSubstances from "./pages/Mixing";
 function App() {
   return (
     <>
@@ -16,7 +16,7 @@ function App() {
           "./pages/ElectricalConductivity";
           <Route path="/conductivity" element={<HeatingSimulation />} />
           <Route path="/magnetisim" element={<MagneticPropertiesLab />} />
-          <Route path="/dissolving" element={<Dissolving />} />
+          <Route path="/dissolving" element={<LabysLabCoolingSubstances />} />
           <Route path="/result" element={<Result />} />
         </Routes>
       </div>
