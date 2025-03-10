@@ -311,20 +311,6 @@ const HeatingSubstancesSimulation = () => {
     }
   };
 
-  // Get height for substance based on state
-  const getSubstanceHeight = () => {
-    switch (substanceState) {
-      case "solid":
-        return "h-24";
-      case "liquid":
-        return "h-20";
-      case "gas":
-        return "h-40";
-      default:
-        return "h-24";
-    }
-  };
-
   // Render vapor particles for gas state
   const renderVaporParticles = () => {
     if (substanceState !== "gas") return null;
@@ -357,31 +343,6 @@ const HeatingSubstancesSimulation = () => {
     return particles;
   };
 
-  // Render ice cubes for solid state
-  const renderIceCubes = () => {
-    if (substanceState !== "solid") return null;
-
-    const cubes = [];
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        cubes.push(
-          <div
-            key={`${i}-${j}`}
-            className="absolute bg-blue-100 border border-blue-200 rounded-lg"
-            style={{
-              left: `${20 + i * 25}%`,
-              top: `${20 + j * 25}%`,
-              width: "20%",
-              height: "20%",
-              transform: `rotate(${Math.random() * 20 - 10}deg)`,
-            }}
-          />
-        );
-      }
-    }
-
-    return cubes;
-  };
 
   return (
     <div
@@ -418,36 +379,170 @@ const HeatingSubstancesSimulation = () => {
         </div>
 
         {/* Substance Container */}
-        <div className="absolute left-0 right-0 mx-auto max-w-xl bottom-20 h-80 overflow-hidden">
-          {/* Container with substance */}
-          <div className="left-0 right-0 mx-auto w-40 h-48">
+        {/* Enhanced Container with Realistic Sealed Effect */}
+        <div className="absolute left-0 right-0 mx-auto max-w-xl bottom-36 h-80 overflow-visible">
+          {/* Laboratory Container */}
+          <div className="left-0 right-0 mx-auto w-48 h-64 relative">
+            {/* Lab-style lid with clamps */}
+            {isSealed && (
+              <div className="absolute -top-6 w-full z-20">
+                <div className="relative left-1/2 transform -translate-x-1/2">
+                  {/* Main cap */}
+                  <div className="w-36 h-6 bg-gradient-to-r from-gray-600 via-gray-700 to-gray-600 rounded-t-xl shadow-lg">
+                    <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-12 h-1.5 bg-gray-500 rounded-full"></div>
+                    <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-800 rounded-full"></div>
+
+                    {/* Lid clamps */}
+                    <div className="absolute -left-1 top-4 w-4 h-5 bg-gray-500 rounded-l-md shadow-md"></div>
+                    <div className="absolute -right-1 top-4 w-4 h-5 bg-gray-500 rounded-r-md shadow-md"></div>
+                  </div>
+
+                  {/* Rubber gasket */}
+                  <div className="w-34 h-1.5 bg-gradient-to-r from-gray-600 via-amber-900 to-gray-600 rounded-b-sm"></div>
+                </div>
+              </div>
+            )}
+
+            {/* Container glass with enhanced realism */}
             <div
               className={`relative ${
-                isSealed ? "border-t-2" : ""
-              } border-x-2 border-b-2 border-gray-400 rounded-lg bg-gray-50 h-full overflow-hidden ${
-                isSealed ? "" : "rounded-t-none"
-              }`}
+                isSealed
+                  ? "rounded-lg overflow-hidden"
+                  : "rounded-b-lg rounded-t-none overflow-hidden"
+              } border-0`}
+              style={{
+                height: "100%",
+                background:
+                  "linear-gradient(135deg, rgba(230,240,255,0.4), rgba(255,255,255,0.5) 30%, rgba(230,240,255,0.3) 50%, rgba(255,255,255,0.4) 70%, rgba(230,240,255,0.4))",
+                boxShadow:
+                  "0 0 15px rgba(0,0,0,0.15), inset 0 0 30px rgba(255,255,255,0.25)",
+              }}
             >
-              {/* Substance */}
+              {/* Container walls with enhanced glass effect */}
               <div
-                className={`absolute bottom-0 left-0 right-0 ${getSubstanceColor()} ${getSubstanceHeight()} transition-all duration-500`}
+                className="absolute inset-0.5 border-2 border-blue-50 rounded-lg bg-opacity-5 bg-blue-50"
+                style={{
+                  backdropFilter: "blur(1px)",
+                  boxShadow:
+                    "inset 0 0 15px rgba(255,255,255,0.4), inset 0 0 5px rgba(255,255,255,0.6)",
+                }}
               >
-                {renderIceCubes()}
-                {renderVaporParticles()}
-              </div>
-
-              {/* Heat visual */}
-              {isHeating && (
-                <div className="absolute -bottom-2 left-0 right-0 flex justify-center">
-                  {[...Array(Math.ceil(heatLevel / 10))].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-1 h-8 bg-red-500 mx-1 animate-pulse"
-                      style={{ animationDelay: `${i * 0.1}s` }}
-                    />
+                {/* Measurement markings */}
+                <div className="absolute left-2 inset-y-0 flex flex-col justify-between py-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="flex items-center">
+                      <div className="w-2 h-0.5 bg-black opacity-40"></div>
+                      <div className="text-xs text-gray-600 ml-1 opacity-60">
+                        {(5 - i) * 20}
+                      </div>
+                    </div>
                   ))}
                 </div>
-              )}
+
+                {/* Glass light reflections */}
+                <div className="absolute top-5 left-6 w-1 h-24 bg-white opacity-50 rounded-full"></div>
+                <div className="absolute top-10 left-10 w-0.5 h-16 bg-white opacity-40 rounded-full"></div>
+                <div className="absolute top-2 right-8 w-0.5 h-20 bg-white opacity-30 rounded-full"></div>
+
+                {/* Open container edge with meniscus effect */}
+                {!isSealed && (
+                  <div className="absolute top-0 inset-x-0">
+                    <div className="h-0.5 bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3/4 h-2 rounded-b-full bg-white opacity-10"></div>
+                  </div>
+                )}
+
+                {/* Sealed rubber gasket effect */}
+                {isSealed && (
+                  <div className="absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-gray-500 via-amber-800 to-gray-500 opacity-80 border-b border-gray-600"></div>
+                )}
+
+                {/* Container contents */}
+                <div
+                  className={`absolute transition-all duration-1000 left-0 right-0 ${getSubstanceColor()}`}
+                  style={{
+                    bottom: 0,
+                    height:
+                      substanceState === "gas"
+                        ? "90%"
+                        : substanceState === "liquid"
+                        ? "60%"
+                        : "40%",
+                    boxShadow:
+                      substanceState === "liquid"
+                        ? "inset 0 10px 15px -5px rgba(0,0,0,0.2)"
+                        : "none",
+                  }}
+                >
+                  {/* Enhanced content rendering - keep your existing content rendering code */}
+                  {substanceState === "liquid" && (
+                    <div className="absolute top-0 inset-x-0 h-3 bg-blue-300 opacity-30">
+                      <div className="absolute inset-x-0 top-0 h-1 bg-white opacity-40"></div>
+                    </div>
+                  )}
+
+                  {substanceState === "solid" && (
+                    <div className="relative w-full h-full">
+                      {[...Array(9)].map((_, i) => {
+                        const row = Math.floor(i / 3);
+                        const col = i % 3;
+                        return (
+                          <div
+                            key={`cube-${i}`}
+                            className="absolute bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg shadow-inner border border-blue-50"
+                            style={{
+                              width: `${20 + Math.random() * 5}%`,
+                              height: `${20 + Math.random() * 5}%`,
+                              transform: `rotate(${
+                                Math.random() * 30 - 15
+                              }deg)`,
+                              left: `${15 + col * 25}%`,
+                              bottom: `${10 + row * 25}%`,
+                              boxShadow:
+                                "inset 2px 2px 4px rgba(255,255,255,0.8), 2px 2px 4px rgba(0,0,0,0.1)",
+                            }}
+                          >
+                            <div className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full opacity-80"></div>
+                            <div className="absolute bottom-1 left-1 w-3 h-1 bg-white rounded-full opacity-50"></div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {renderVaporParticles()}
+                </div>
+
+                {/* Condensation drops on container walls - keep your existing code */}
+                {(substanceState === "liquid" || substanceState === "gas") &&
+                  temperature > MELTING_POINT + 10 && (
+                    <>
+                      {[...Array(15)].map((_, i) => (
+                        <div
+                          key={`drop-${i}`}
+                          className="absolute bg-gradient-to-b from-blue-200 to-blue-300 rounded-b-full opacity-70"
+                          style={{
+                            width: `${1 + Math.random() * 2}px`,
+                            height: `${3 + Math.random() * 5}px`,
+                            left: `${2 + Math.random() * 96}%`,
+                            top: `${20 + Math.random() * 50}%`,
+                            animation:
+                              i % 4 === 0
+                                ? `dropSlide ${3 + Math.random() * 5}s infinite`
+                                : "",
+                            animationDelay: `${i * 0.5}s`,
+                          }}
+                        ></div>
+                      ))}
+                    </>
+                  )}
+              </div>
+            </div>
+
+            {/* Improved container stand */}
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-40 h-5">
+              <div className="w-full h-full bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 rounded-full shadow-md"></div>
+              <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-gray-500 via-gray-400 to-gray-500 rounded-full"></div>
             </div>
           </div>
 
@@ -455,6 +550,135 @@ const HeatingSubstancesSimulation = () => {
           <div className="absolute bottom- left-0 right-0 mx-auto flex flex-col items-center">
             <img src="digital-meter.png" className="h-24 " alt="" />
           </div>
+
+          {/* Heat effect */}
+          {isHeating && (
+            <div className="absolute -bottom-3 left-0 right-0 flex justify-center">
+              {/* Lab Bunsen burner effect */}
+              <div className="relative h-16 w-20">
+                {/* Burner base */}
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-10 h-3 bg-gradient-to-b from-gray-700 to-gray-900 rounded-md"></div>
+
+                {/* Burner tube */}
+                <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 w-4 h-6 bg-gradient-to-b from-gray-600 to-gray-800 rounded-md"></div>
+
+                {/* Heat indicator ring with glow based on heat level */}
+                <div
+                  className="absolute bottom-9 left-1/2 transform -translate-x-1/2 w-8 h-2 border border-gray-700 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 rounded-md"
+                  style={{
+                    boxShadow: `0 0 ${heatLevel / 7}px ${
+                      heatLevel / 15
+                    }px rgba(255, 100, 0, 0.7)`,
+                  }}
+                ></div>
+
+                {/* Main flame */}
+                <div className="absolute bottom-11 left-1/2 transform -translate-x-1/2 flex items-end justify-center">
+                  {/* Central blue flame */}
+                  <div
+                    className="relative"
+                    style={{
+                      width: `${4 + heatLevel / 20}px`,
+                      height: `${10 + heatLevel / 3}px`,
+                      background: "linear-gradient(to top, #3498db, #00c6ff)",
+                      borderRadius: "0 0 30% 30%",
+                      animation: "flameHeight 2s infinite alternate",
+                      boxShadow: `0 0 ${
+                        heatLevel / 15
+                      }px rgba(0, 150, 255, 0.6)`,
+                    }}
+                  ></div>
+
+                  {/* Outer orange flame */}
+                  <div
+                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
+                    style={{
+                      width: `${8 + heatLevel / 12}px`,
+                      height: `${6 + heatLevel / 4}px`,
+                      background:
+                        "linear-gradient(to top, #ff5e00, #ff9500, rgba(255, 166, 0, 0))",
+                      borderRadius: "30% 30% 60% 60%",
+                      animation: "flameFlicker 1.5s infinite alternate",
+                      opacity: 0.85,
+                      zIndex: -1,
+                    }}
+                  ></div>
+                </div>
+
+                {/* Heat ripples */}
+                {heatLevel > 30 &&
+                  [...Array(3)].map((_, i) => (
+                    <div
+                      key={`ripple-${i}`}
+                      className="absolute"
+                      style={{
+                        bottom: `${11 + i * 4}px`,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: `${12 + i * 3}px`,
+                        height: "2px",
+                        backgroundColor: "transparent",
+                        borderRadius: "50%",
+                        border: "1px solid rgba(255,255,255,0.15)",
+                        animation: `heatRipple ${1.5 + i * 0.5}s infinite`,
+                        animationDelay: `${i * 0.3}s`,
+                        opacity: 0.5,
+                      }}
+                    ></div>
+                  ))}
+              </div>
+            </div>
+          )}
+          <style jsx>{`
+            @keyframes dropSlide {
+              0% {
+                transform: translateY(0);
+              }
+              80% {
+                transform: translateY(20px);
+                opacity: 0.7;
+              }
+              100% {
+                transform: translateY(25px);
+                opacity: 0;
+              }
+            }
+
+            @keyframes flameHeight {
+              0% {
+                height: ${10 + heatLevel / 3}px;
+              }
+              100% {
+                height: ${12 + heatLevel / 2.5}px;
+              }
+            }
+
+            @keyframes flameFlicker {
+              0% {
+                opacity: 0.7;
+                transform: translateX(-50%) scaleX(0.9);
+              }
+              100% {
+                opacity: 0.9;
+                transform: translateX(-50%) scaleX(1.1);
+              }
+            }
+
+            @keyframes heatRipple {
+              0% {
+                transform: translateX(-50%) scale(0.8);
+                opacity: 0.2;
+              }
+              50% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.6;
+              }
+              100% {
+                transform: translateX(-50%) scale(1.2);
+                opacity: 0;
+              }
+            }
+          `}</style>
         </div>
       </div>
     </div>
