@@ -285,7 +285,7 @@ const LabysLabCoolingSubstances = () => {
 
   return (
     <div
-      style={{ backgroundImage: "url(page-three-bg.png)" }}
+      style={{ backgroundImage: "url(page-two-bg.png)" }}
       className="w-full bg-no-repeat bg-bottom bg-cover h-screen "
     >
       <div className="px-4 sm:px-8 md:px-16 lg:px-28 h-full max-w-screen-2xl mx-auto p-6">

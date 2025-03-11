@@ -14,9 +14,9 @@ function App() {
           <Route path="/" element={<Home />} />
           import ElectricalConductivityTester from
           "./pages/ElectricalConductivity";
-          <Route path="/conductivity" element={<HeatingSimulation />} />
-          <Route path="/magnetisim" element={<MixingSubstancesLab />} />
-          <Route path="/dissolving" element={<LabysLabCoolingSubstances />} />
+          <Route path="/heating" element={<HeatingSimulation />} />
+          <Route path="/mixing" element={<MixingSubstancesLab />} />
+          <Route path="/cooling" element={<LabysLabCoolingSubstances />} />
           <Route path="/result" element={<Result />} />
         </Routes>
       </div>

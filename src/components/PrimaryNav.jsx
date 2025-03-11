@@ -10,17 +10,17 @@ import {
 function Navbar() {
   const location = useLocation();
   const [visitedPages, setVisitedPages] = useState({
-    conductivity: false,
-    evaporation: false,
-    dissolving: false,
+    heating: false,
+    mixing: false,
+    cooling: false,
   });
  
   useEffect(() => {
     // Mark the current page as visited
     const pageMap = {
-      "/conductivity": "conductivity",
-      "/magnetisim": "magnetisim",
-      "/dissolving": "dissolving",
+      "/heating": "heating",
+      "/mixing": "mixing",
+      "/cooling": "cooling",
     };
 
     if (pageMap[location.pathname]) {
@@ -32,9 +32,7 @@ function Navbar() {
   }, [location.pathname]);
 
   const allVisited =
-    visitedPages.conductivity &&
-    visitedPages.magnetisim &&
-    visitedPages.dissolving;
+    visitedPages.heating && visitedPages.magnetisim && visitedPages.dissolving;
 
   return (
     <nav className="fixed w-full z-10 px-4 sm:px-6 md:px-16 lg:px-28 mt-3">
@@ -50,13 +48,13 @@ function Navbar() {
           <div
             className={`gap-2 ${location.pathname === "/" ? "hidden" : "flex"}`}
           >
-            <NavButton to="/conductivity" icon={<FaFire />} label="Heating" />
+            <NavButton to="/heating" icon={<FaFire />} label="Heating" />
             <NavButton
-              to="/magnetisim"
+              to="/cooling"
               icon={<FaSnowflake />}
               label="Cooling"
             />
-            <NavButton to="/dissolving" icon={<FaFlask />} label="Mixing" />
+            <NavButton to="/mixing" icon={<FaFlask />} label="Mixing" />
             <NavButton
               to="/result"
               icon={<FaChartBar />}
