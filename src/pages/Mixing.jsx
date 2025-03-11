@@ -4,7 +4,7 @@ const MixingSubstancesLab = () => {
   // State variables
   const [stirringSpeed, setStirringSpeed] = useState(0);
   const [secondSubstanceAdded, setSecondSubstanceAdded] = useState(false);
-  const [containerSealed, setContainerSealed] = useState(false);
+  const [containerSealed, setContainerSealed] = useState(true);
   const [time, setTime] = useState(0);
   const [data, setData] = useState([]);
   const [animationSpeed, setAnimationSpeed] = useState(1);

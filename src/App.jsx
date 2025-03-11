@@ -12,8 +12,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          import ElectricalConductivityTester from
-          "./pages/ElectricalConductivity";
+
           <Route path="/heating" element={<HeatingSimulation />} />
           <Route path="/mixing" element={<MixingSubstancesLab />} />
           <Route path="/cooling" element={<LabysLabCoolingSubstances />} />
