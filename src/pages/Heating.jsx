@@ -343,7 +343,6 @@ const HeatingSubstancesSimulation = () => {
     return particles;
   };
 
-
   return (
     <div
       style={{ backgroundImage: "url(page-first-bg.png)" }}
@@ -402,7 +401,6 @@ const HeatingSubstancesSimulation = () => {
                 </div>
               </div>
             )}
-
             {/* Container glass with enhanced realism */}
             <div
               className={`relative ${
@@ -538,96 +536,27 @@ const HeatingSubstancesSimulation = () => {
                   )}
               </div>
             </div>
-
             {/* Improved container stand */}
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-40 h-5">
-              <div className="w-full h-full bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 rounded-full shadow-md"></div>
-              <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-gray-500 via-gray-400 to-gray-500 rounded-full"></div>
-            </div>
+            {/* Weighing scale with digital display */}
           </div>
-
-          {/* Weighing scale */}
           <div className="absolute bottom- left-0 right-0 mx-auto flex flex-col items-center">
-            <img src="digital-meter.png" className="h-24 " alt="" />
-          </div>
-          {/* Heat effect */}
-          {isHeating && (
-            <div className="absolute -bottom-3 left-0 right-0 flex justify-center">
-              {/* Lab Bunsen burner effect */}
-              <div className="relative h-16 w-20">
-                {/* Burner base */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-10 h-3 bg-gradient-to-b from-gray-700 to-gray-900 rounded-md"></div>
-
-                {/* Burner tube */}
-                <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 w-4 h-6 bg-gradient-to-b from-gray-600 to-gray-800 rounded-md"></div>
-
-                {/* Heat indicator ring with glow based on heat level */}
-                <div
-                  className="absolute bottom-9 left-1/2 transform -translate-x-1/2 w-8 h-2 border border-gray-700 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 rounded-md"
-                  style={{
-                    boxShadow: `0 0 ${heatLevel / 7}px ${
-                      heatLevel / 15
-                    }px rgba(255, 100, 0, 0.7)`,
-                  }}
-                ></div>
-
-                {/* Main flame */}
-                <div className="absolute bottom-11 left-1/2 transform -translate-x-1/2 flex items-end justify-center">
-                  {/* Central blue flame */}
-                  <div
-                    className="relative"
-                    style={{
-                      width: `${4 + heatLevel / 20}px`,
-                      height: `${10 + heatLevel / 3}px`,
-                      background: "linear-gradient(to top, #3498db, #00c6ff)",
-                      borderRadius: "0 0 30% 30%",
-                      animation: "flameHeight 2s infinite alternate",
-                      boxShadow: `0 0 ${
-                        heatLevel / 15
-                      }px rgba(0, 150, 255, 0.6)`,
-                    }}
-                  ></div>
-
-                  {/* Outer orange flame */}
-                  <div
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
-                    style={{
-                      width: `${8 + heatLevel / 12}px`,
-                      height: `${6 + heatLevel / 4}px`,
-                      background:
-                        "linear-gradient(to top, #ff5e00, #ff9500, rgba(255, 166, 0, 0))",
-                      borderRadius: "30% 30% 60% 60%",
-                      animation: "flameFlicker 1.5s infinite alternate",
-                      opacity: 0.85,
-                      zIndex: -1,
-                    }}
-                  ></div>
-                </div>
-
-                {/* Heat ripples */}
-                {heatLevel > 30 &&
-                  [...Array(3)].map((_, i) => (
-                    <div
-                      key={`ripple-${i}`}
-                      className="absolute"
-                      style={{
-                        bottom: `${11 + i * 4}px`,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        width: `${12 + i * 3}px`,
-                        height: "2px",
-                        backgroundColor: "transparent",
-                        borderRadius: "50%",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        animation: `heatRipple ${1.5 + i * 0.5}s infinite`,
-                        animationDelay: `${i * 0.3}s`,
-                        opacity: 0.5,
-                      }}
-                    ></div>
-                  ))}
+            <img src="digital-meter.png" className="h-24" alt="" />
+            {/* Digital weight display */}
+            <div
+              className="absolute top-7 left-1/2 transform -translate-x-1/2 
+                flex items-center justify-center rounded-sm overflow-hidden"
+            >
+              <div
+                className="text-sm font-mono"
+                style={{
+                  color: "#22c55e", // Digital green display color
+                  textShadow: "0 0 5px rgba(34, 197, 94, 0.7)",
+                }}
+              >
+                {weight.toFixed(2)}
               </div>
             </div>
-          )}
+          </div>
           <style jsx>{`
             @keyframes dropSlide {
               0% {
