@@ -246,11 +246,25 @@ const HeatingSubstancesSimulation = () => {
         }
 
         // Calculate weight loss for unsealed container
-        if (!isSealed && substanceState === "gas") {
-          setWeightLossRate(heatLevel * 0.01);
-          setWeight((prevWeight) =>
-            Math.max(prevWeight - weightLossRate * deltaTime * 0.01, 0)
+        if (!isSealed && substanceState === "gas" && weight > 0) {
+          // Much faster weight loss calculation based on heat level and temperature
+          const baseRate = 0.05; // Increased from 0.01
+          const temperatureFactor = Math.max(
+            0,
+            (temperature - BOILING_POINT) / 50
           );
+          const newWeightLossRate =
+            baseRate * (1 + temperatureFactor) * heatLevel;
+
+          setWeightLossRate(newWeightLossRate);
+          setWeight((prevWeight) => {
+            // More dramatic weight loss
+            const newWeight = Math.max(
+              prevWeight - newWeightLossRate * deltaTime * 0.02,
+              0
+            );
+            return newWeight;
+          });
         } else {
           setWeightLossRate(0);
         }
@@ -436,12 +450,10 @@ const HeatingSubstancesSimulation = () => {
                     </div>
                   ))}
                 </div>
-
                 {/* Glass light reflections */}
                 <div className="absolute top-5 left-6 w-1 h-24 bg-white opacity-50 rounded-full"></div>
                 <div className="absolute top-10 left-10 w-0.5 h-16 bg-white opacity-40 rounded-full"></div>
                 <div className="absolute top-2 right-8 w-0.5 h-20 bg-white opacity-30 rounded-full"></div>
-
                 {/* Open container edge with meniscus effect */}
                 {!isSealed && (
                   <div className="absolute top-0 inset-x-0">
@@ -449,68 +461,80 @@ const HeatingSubstancesSimulation = () => {
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3/4 h-2 rounded-b-full bg-white opacity-10"></div>
                   </div>
                 )}
-
                 {/* Sealed rubber gasket effect */}
                 {isSealed && (
                   <div className="absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-gray-500 via-amber-800 to-gray-500 opacity-80 border-b border-gray-600"></div>
                 )}
-
                 {/* Container contents */}
                 <div
-                  className={`absolute transition-all duration-1000 left-0 right-0 ${getSubstanceColor()}`}
+                  className={`absolute transition-all duration-1000 left-0 right-0 ${
+                    weight > 0 ? getSubstanceColor() : "bg-transparent"
+                  }`}
                   style={{
                     bottom: 0,
                     height:
-                      substanceState === "gas"
+                      weight <= 0
+                        ? "0%" // Empty container when weight is 0
+                        : substanceState === "gas"
                         ? "90%"
                         : substanceState === "liquid"
                         ? "60%"
                         : "40%",
                     boxShadow:
-                      substanceState === "liquid"
+                      substanceState === "liquid" && weight > 0
                         ? "inset 0 10px 15px -5px rgba(0,0,0,0.2)"
                         : "none",
                   }}
                 >
-                  {/* Enhanced content rendering - keep your existing content rendering code */}
-                  {substanceState === "liquid" && (
-                    <div className="absolute top-0 inset-x-0 h-3 bg-blue-300 opacity-30">
-                      <div className="absolute inset-x-0 top-0 h-1 bg-white opacity-40"></div>
-                    </div>
+                  {/* Empty container message - only shows when container is completely empty */}
+                  {weight <= 0 && (
+                    <div className="absolute bottom-0 left-0 right-0 text-center text-xs text-gray-500 animate-fade-in py-2"></div>
                   )}
 
-                  {substanceState === "solid" && (
-                    <div className="relative w-full h-full">
-                      {[...Array(9)].map((_, i) => {
-                        const row = Math.floor(i / 3);
-                        const col = i % 3;
-                        return (
-                          <div
-                            key={`cube-${i}`}
-                            className="absolute bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg shadow-inner border border-blue-50"
-                            style={{
-                              width: `${20 + Math.random() * 5}%`,
-                              height: `${20 + Math.random() * 5}%`,
-                              transform: `rotate(${
-                                Math.random() * 30 - 15
-                              }deg)`,
-                              left: `${15 + col * 25}%`,
-                              bottom: `${10 + row * 25}%`,
-                              boxShadow:
-                                "inset 2px 2px 4px rgba(255,255,255,0.8), 2px 2px 4px rgba(0,0,0,0.1)",
-                            }}
-                          >
-                            <div className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full opacity-80"></div>
-                            <div className="absolute bottom-1 left-1 w-3 h-1 bg-white rounded-full opacity-50"></div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                  {/* Enhanced content rendering - only shows when there's substance left */}
+                  {weight > 0 && (
+                    <>
+                      {substanceState === "liquid" && (
+                        <div className="absolute top-0 inset-x-0 h-3 bg-blue-300 opacity-30">
+                          <div className="absolute inset-x-0 top-0 h-1 bg-white opacity-40"></div>
+                        </div>
+                      )}
 
-                  {renderVaporParticles()}
+                      {substanceState === "solid" && (
+                        <div className="relative w-full h-full">
+                          {/* Existing solid state code */}
+                          {[...Array(9)].map((_, i) => {
+                            const row = Math.floor(i / 3);
+                            const col = i % 3;
+                            return (
+                              <div
+                                key={`cube-${i}`}
+                                className="absolute bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg shadow-inner border border-blue-50"
+                                style={{
+                                  width: `${20 + Math.random() * 5}%`,
+                                  height: `${20 + Math.random() * 5}%`,
+                                  transform: `rotate(${
+                                    Math.random() * 30 - 15
+                                  }deg)`,
+                                  left: `${15 + col * 25}%`,
+                                  bottom: `${10 + row * 25}%`,
+                                  boxShadow:
+                                    "inset 2px 2px 4px rgba(255,255,255,0.8), 2px 2px 4px rgba(0,0,0,0.1)",
+                                }}
+                              >
+                                <div className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full opacity-80"></div>
+                                <div className="absolute bottom-1 left-1 w-3 h-1 bg-white rounded-full opacity-50"></div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* Only render vapor particles if there's substance left */}
+                      {renderVaporParticles()}
+                    </>
+                  )}
                 </div>
-
                 {/* Condensation drops on container walls - keep your existing code */}
                 {(substanceState === "liquid" || substanceState === "gas") &&
                   temperature > MELTING_POINT + 10 && (

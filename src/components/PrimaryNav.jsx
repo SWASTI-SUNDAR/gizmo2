@@ -32,7 +32,7 @@ function Navbar() {
   }, [location.pathname]);
 
   const allVisited =
-    visitedPages.heating && visitedPages.magnetisim && visitedPages.dissolving;
+    visitedPages.heating && visitedPages.mixing && visitedPages.cooling;
 
   return (
     <nav className="fixed w-full z-10 px-4 sm:px-6 md:px-16 lg:px-28 mt-3">
