@@ -27,10 +27,10 @@ const ParameterRow = ({ label, value }) => (
 );
 
 const ScienceSimulationUI = () => {
-  const { conductivityData, MagnetisimData, dissolvingData } =
+  const { heatingData, coolingData, mixingData } =
     useContext(ExperimentContext);
   // alert("Result Page");
-  console.log(conductivityData, MagnetisimData, dissolvingData);
+  console.log(heatingData, coolingData, mixingData);
   return (
     <div
       style={{ backgroundImage: "url(result-page-bg.png)" }}
@@ -49,54 +49,51 @@ const ScienceSimulationUI = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="col-span-1">
-            <ExperimentCard title="Conductivuty" color="bg-pink-500">
+            <ExperimentCard title="Heating" color="bg-pink-500">
               <ParameterRow
-                label="Conductive :"
-                value={conductivityData[0]?.conductive || "N/A"}
+                label="Initial Temperature:"
+                value={(heatingData && heatingData[0]?.initialTemp) || "25 °C"}
               />
               <ParameterRow
-                label="material:"
-                value={conductivityData[0]?.material || "N/A"}
+                label="Final Temperature:"
+                value={(heatingData && heatingData[0]?.finalTemp) || "100 °C"}
               />
               <ParameterRow
-                label="voltage:"
-                value={conductivityData[0]?.voltage || "N/A"}
+                label="Heating Duration:"
+                value={(heatingData && heatingData[0]?.duration) || "5 min"}
               />
             </ExperimentCard>
           </div>
 
           <div className="col-span-1">
-            <ExperimentCard title="Magnetisim" color="bg-cyan-500">
+            <ExperimentCard title="Cooling" color="bg-cyan-500">
               <ParameterRow
-                label="Material"
-                value={MagnetisimData[0]?.material || "N/A"}
+                label="Initial Temperature"
+                value={(coolingData && coolingData[0]?.initialTemp) || "100 °C"}
               />
               <ParameterRow
-                label="Magnetic"
-                value={MagnetisimData[0]?.isMagnetic || "N/A" + " °C"}
+                label="Final Temperature"
+                value={(coolingData && coolingData[0]?.finalTemp) || "25 °C"}
               />
               <ParameterRow
-                label="strength"
-                value={MagnetisimData[0]?.strength || "N/A" + " °C"}
+                label="Cooling Rate"
+                value={(coolingData && coolingData[0]?.rate) || "15 °C/min"}
               />
             </ExperimentCard>
           </div>
           <div className="col-span-1">
-            <ExperimentCard
-              title="Dissolving a Solid in Liquid"
-              color="bg-orange-500"
-            >
+            <ExperimentCard title="Mixing" color="bg-orange-500">
               <ParameterRow
-                label="Concentration"
-                value={dissolvingData[0]?.concentration || "N/A"}
+                label="Substance A"
+                value={(mixingData && mixingData[0]?.substanceA) || "Water"}
               />
               <ParameterRow
-                label="Temperature"
-                value={dissolvingData[0]?.temperature || "N/A" + " °C"}
+                label="Substance B"
+                value={(mixingData && mixingData[0]?.substanceB) || "oil"}
               />
               <ParameterRow
-                label="Stirring Speed"
-                value={dissolvingData[0]?.stirringSpeed || "N/A" + " °C"}
+                label="Reaction Time"
+                value={(mixingData && mixingData[0]?.reactionTime) || "30 sec"}
               />
             </ExperimentCard>
           </div>
