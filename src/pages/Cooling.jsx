@@ -278,7 +278,7 @@ const LabysLabCoolingSubstances = () => {
   const resetSimulation = () => {
     setIsRunning(false);
     setTime(0);
-    setTemperature(20);
+    setTemperature(10);
     setWeight(100);
     setData([]);
   };
