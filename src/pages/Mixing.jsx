@@ -757,6 +757,11 @@ const MixingSubstancesLab = () => {
             }
           `}</style>
         </div>
+        <img
+          src="male-main.png"
+          className="absolute hidden md:block h-[55vh] z-0 -bottom-0 right right-[20%]"
+          alt=""
+        />
       </div>
     </div>
   );

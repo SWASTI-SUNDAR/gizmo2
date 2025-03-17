@@ -825,6 +825,11 @@ const LabysLabCoolingSubstances = () => {
             </div>
           </div>
         </div>
+        <img
+          src="male-main.png"
+          className="absolute hidden md:block h-[55vh] z-0 -bottom-0 right right-[20%]"
+          alt=""
+        />
         <style jsx>{`
           @keyframes waterRipple {
             0% {

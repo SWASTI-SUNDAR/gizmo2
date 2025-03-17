@@ -8,7 +8,7 @@ import MixingSubstancesLab from "./pages/Mixing";
 function App() {
   return (
     <>
-      <div className="overflow-hidden">
+      <div className="overflow-hidden ">
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />

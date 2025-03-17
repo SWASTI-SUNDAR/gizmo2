@@ -360,7 +360,7 @@ const HeatingSubstancesSimulation = () => {
   return (
     <div
       style={{ backgroundImage: "url(page-first-bg.png)" }}
-      className="w-full bg-no-repeat bg-bottom bg-cover h-screen "
+      className="w-full bg-no-repeat bg-bottom overflow-hidden bg-cover h-screen "
     >
       <div className="px-4 sm:px-8 md:px-16 lg:px-28 h-full max-w-screen-2xl mx-auto p-6">
         <div className="relative space-y-6 h-full mt-6">
@@ -632,7 +632,12 @@ const HeatingSubstancesSimulation = () => {
             }
           `}</style>
         </div>
-      </div>
+        </div>
+        <img
+          src="male-main.png"
+          className="absolute hidden md:block h-[55vh] z-0 -bottom-0 right right-[20%]"
+          alt=""
+        />
     </div>
   );
 };
