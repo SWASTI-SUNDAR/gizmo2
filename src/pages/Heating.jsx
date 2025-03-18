@@ -18,6 +18,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useContext } from "react";
+import { ExperimentContext } from "../context/Context";
 
 const HeatingSubstancesSimulation = () => {
   // State variables
@@ -33,7 +35,7 @@ const HeatingSubstancesSimulation = () => {
 
   const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
-
+  const { heatingData, setHeatingData } = useContext(ExperimentContext);
   // First, add this state near your other state variables in HeatingSubstancesSimulation
   const [activeTab, setActiveTab] = useState("status");
 
@@ -226,7 +228,7 @@ const HeatingSubstancesSimulation = () => {
 
     // Add to the dataPoints array
     setDataPoints((prevData) => [...prevData, newDataPoint]);
-
+    setHeatingData((prevData) => [...prevData, newDataPoint]);
     // Update record count and show confirmation message
     setRecordCount((prevCount) => prevCount + 1);
     setShowRecordConfirmation(true);

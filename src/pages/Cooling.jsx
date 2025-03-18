@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   LineChart,
   Line,
@@ -19,6 +19,7 @@ import {
   Pause,
   Play,
 } from "lucide-react";
+import { ExperimentContext } from "../context/Context";
 
 const LabysLabCoolingSubstances = () => {
   // State variables
@@ -32,6 +33,7 @@ const LabysLabCoolingSubstances = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
+  const { coolingData, setCoolingData } = useContext(ExperimentContext);
   // Add this state to your component
 
   const recordDataPoint = () => {
@@ -46,13 +48,13 @@ const LabysLabCoolingSubstances = () => {
 
     // Add to existing data
     setData((prevData) => [...prevData, newDataPoint]);
+    setCoolingData((prevData) => [...prevData, newDataPoint]); // Add this line
 
     // Update record count and show confirmation
     setRecordCount((prevCount) => prevCount + 1);
     setShowRecordConfirmation(true);
     setTimeout(() => setShowRecordConfirmation(false), 1500);
   };
-
 
   const [activeTab, setActiveTab] = useState("description");
 

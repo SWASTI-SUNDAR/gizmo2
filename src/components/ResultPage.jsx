@@ -31,6 +31,14 @@ const ScienceSimulationUI = () => {
     useContext(ExperimentContext);
   // alert("Result Page");
   console.log(heatingData, coolingData, mixingData);
+  // Get first recorded data point from each experiment
+  const heatingEntry =
+    heatingData && heatingData.length > 0 ? heatingData[0] : null;
+  const coolingEntry =
+    coolingData && coolingData.length > 0 ? coolingData[0] : null;
+  const mixingEntry =
+    mixingData && mixingData.length > 0 ? mixingData[0] : null;
+
   return (
     <div
       style={{ backgroundImage: "url(result-page-bg.png)" }}
@@ -49,51 +57,62 @@ const ScienceSimulationUI = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="col-span-1">
-            <ExperimentCard title="Heating" color="bg-pink-500">
+            <ExperimentCard title="Heating Experiment" color="bg-pink-500">
               <ParameterRow
-                label="Initial Temperature:"
-                value={(heatingData && heatingData[0]?.initialTemp) || "25 °C"}
+                label="Temperature:"
+                value={heatingEntry ? `${heatingEntry.temperature} °C` : "N/A"}
               />
               <ParameterRow
-                label="Final Temperature:"
-                value={(heatingData && heatingData[0]?.finalTemp) || "100 °C"}
+                label="Time:"
+                value={heatingEntry ? `${heatingEntry.time} seconds` : "N/A"}
               />
               <ParameterRow
-                label="Heating Duration:"
-                value={(heatingData && heatingData[0]?.duration) || "5 min"}
+                label="Physical State:"
+                value={heatingEntry ? heatingEntry.state : "N/A"}
+              />
+              <ParameterRow
+                label="Weight:"
+                value={heatingEntry ? `${heatingEntry.weight} g` : "N/A"}
               />
             </ExperimentCard>
           </div>
 
           <div className="col-span-1">
-            <ExperimentCard title="Cooling" color="bg-cyan-500">
+            <ExperimentCard title="Cooling Experiment" color="bg-cyan-500">
               <ParameterRow
-                label="Initial Temperature"
-                value={(coolingData && coolingData[0]?.initialTemp) || "100 °C"}
+                label="Temperature:"
+                value={coolingEntry ? `${coolingEntry.temperature} °C` : "N/A"}
               />
               <ParameterRow
-                label="Final Temperature"
-                value={(coolingData && coolingData[0]?.finalTemp) || "25 °C"}
+                label="Time:"
+                value={coolingEntry ? `${coolingEntry.time} seconds` : "N/A"}
               />
               <ParameterRow
-                label="Cooling Rate"
-                value={(coolingData && coolingData[0]?.rate) || "15 °C/min"}
+                label="Physical State:"
+                value={coolingEntry ? coolingEntry.state : "N/A"}
+              />
+              <ParameterRow
+                label="Weight:"
+                value={coolingEntry ? `${coolingEntry.weight} g` : "N/A"}
               />
             </ExperimentCard>
           </div>
+
           <div className="col-span-1">
-            <ExperimentCard title="Mixing" color="bg-orange-500">
+            <ExperimentCard title="Mixing Experiment" color="bg-orange-500">
               <ParameterRow
-                label="Substance A"
-                value={(mixingData && mixingData[0]?.substanceA) || "Water"}
+                label="Time:"
+                value={mixingEntry ? `${mixingEntry.time} seconds` : "N/A"}
               />
               <ParameterRow
-                label="Substance B"
-                value={(mixingData && mixingData[0]?.substanceB) || "oil"}
+                label="Properties:"
+                value={mixingEntry ? mixingEntry.properties : "N/A"}
               />
               <ParameterRow
-                label="Reaction Time"
-                value={(mixingData && mixingData[0]?.reactionTime) || "30 sec"}
+                label="Weight:"
+                value={
+                  mixingEntry ? `${mixingEntry.weight.toFixed(2)} g` : "N/A"
+                }
               />
             </ExperimentCard>
           </div>

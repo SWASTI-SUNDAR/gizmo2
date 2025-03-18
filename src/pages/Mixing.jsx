@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { ExperimentContext } from "../context/Context";
 
 const MixingSubstancesLab = () => {
   // State variables
@@ -12,6 +13,8 @@ const MixingSubstancesLab = () => {
   const [showBubbles, setShowBubbles] = useState(false);
   const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
+  
+  const { mixingData, setMixingData } = useContext(ExperimentContext);
 
   const recordDataPoint = () => {
     // Create a new data point with current values
@@ -32,7 +35,7 @@ const MixingSubstancesLab = () => {
 
     // Add to the dataPoints array
     setData((prevData) => [...prevData, newDataPoint]);
-
+    setMixingData((prevData) => [...prevData, newDataPoint]); // Add this line to update context state
     // Update record count and show confirmation message
     setRecordCount((prevCount) => prevCount + 1);
     setShowRecordConfirmation(true);
@@ -40,7 +43,7 @@ const MixingSubstancesLab = () => {
   };
   // Add this state to your main component
   const [activeTab, setActiveTab] = useState(null);
-
+  
   // Tab rendering component
   const renderTabContent = (tab) => {
     if (!activeTab || activeTab !== tab) return null;
@@ -263,7 +266,7 @@ const MixingSubstancesLab = () => {
         return null;
     }
   };
-  
+
   useEffect(() => {
     if (stirringSpeed <= 0) return;
 
@@ -300,10 +303,6 @@ const MixingSubstancesLab = () => {
       setParticleColor("#3b82f6"); // Blue
     }
   }, [secondSubstanceAdded]);
-
-
-
-
 
   // Handle second substance lever
   const handleLeverChange = (e) => {
@@ -913,7 +912,7 @@ const ControlPanel = ({
               </svg>
               Reset
             </button>
-            
+
             {/* Record Data Button */}
             <button
               onClick={recordDataPoint}
