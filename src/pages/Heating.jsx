@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, Lock, Unlock } from "lucide-react";
+import {
+  Play,
+  Pause,
+  Lock,
+  Unlock,
+  Snowflake,
+  Droplet,
+  Cloud,
+} from "lucide-react";
 import {
   LineChart,
   Line,
@@ -22,6 +30,9 @@ const HeatingSubstancesSimulation = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [dataPoints, setDataPoints] = useState([]);
   const [weightLossRate, setWeightLossRate] = useState(0);
+
+  const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
+  const [recordCount, setRecordCount] = useState(0);
 
   // First, add this state near your other state variables in HeatingSubstancesSimulation
   const [activeTab, setActiveTab] = useState("status");
@@ -202,6 +213,25 @@ const HeatingSubstancesSimulation = () => {
         return null;
     }
   };
+
+  const recordDataPoint = () => {
+    // Create a new data point with current values
+    const newDataPoint = {
+      time: Math.floor(timeElapsed),
+      temperature: Math.round(temperature),
+      weight: Math.round(weight * 100) / 100,
+      state: substanceState,
+      recorded: true, // Add a flag to indicate this is a manually recorded point
+    };
+
+    // Add to the dataPoints array
+    setDataPoints((prevData) => [...prevData, newDataPoint]);
+
+    // Update record count and show confirmation message
+    setRecordCount((prevCount) => prevCount + 1);
+    setShowRecordConfirmation(true);
+    setTimeout(() => setShowRecordConfirmation(false), 1500);
+  };
   // Animation references
   const requestRef = useRef();
   const previousTimeRef = useRef();
@@ -270,17 +300,17 @@ const HeatingSubstancesSimulation = () => {
         }
 
         // Add data point every second
-        if (Math.floor(timeElapsed) > dataPoints.length) {
-          setDataPoints((prevData) => [
-            ...prevData,
-            {
-              time: Math.floor(timeElapsed),
-              temperature: Math.round(temperature),
-              weight: Math.round(weight * 100) / 100,
-              state: substanceState,
-            },
-          ]);
-        }
+        // if (Math.floor(timeElapsed) > dataPoints.length) {
+        //   setDataPoints((prevData) => [
+        //     ...prevData,
+        //     {
+        //       time: Math.floor(timeElapsed),
+        //       temperature: Math.round(temperature),
+        //       weight: Math.round(weight * 100) / 100,
+        //       state: substanceState,
+        //     },
+        //   ]);
+        // }
       }
 
       previousTimeRef.current = time;
@@ -373,6 +403,7 @@ const HeatingSubstancesSimulation = () => {
             isSealed={isSealed}
             setIsSealed={setIsSealed}
             resetSimulation={resetSimulation}
+            recordDataPoint={recordDataPoint} // Add this line
           />
 
           {/* Tabs */}
@@ -439,6 +470,40 @@ const HeatingSubstancesSimulation = () => {
                     "inset 0 0 15px rgba(255,255,255,0.4), inset 0 0 5px rgba(255,255,255,0.6)",
                 }}
               >
+                {/* State indicator icon - enhanced with glow effect */}
+                <div
+                  className="absolute top-4 right-2 bg-white rounded-full p-1.5 z-30"
+                  style={{
+                    boxShadow: `0 0 5px rgba(${
+                      substanceState === "solid"
+                        ? "150,200,255"
+                        : substanceState === "liquid"
+                        ? "59,130,246"
+                        : "200,230,255"
+                    }, 0.5)`,
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  {substanceState === "solid" ? (
+                    <Snowflake
+                      className="text-blue-500"
+                      size={20}
+                      style={{ filter: "drop-shadow(0 0 1px #3b82f6)" }}
+                    />
+                  ) : substanceState === "liquid" ? (
+                    <Droplet
+                      className="text-blue-500"
+                      size={20}
+                      style={{ filter: "drop-shadow(0 0 1px #3b82f6)" }}
+                    />
+                  ) : (
+                    <Cloud
+                      className="text-blue-400"
+                      size={20}
+                      style={{ filter: "drop-shadow(0 0 1px #93c5fd)" }}
+                    />
+                  )}
+                </div>
                 {/* Measurement markings */}
                 <div className="absolute left-2 inset-y-0 flex flex-col justify-between py-4">
                   {[...Array(5)].map((_, i) => (
@@ -467,7 +532,7 @@ const HeatingSubstancesSimulation = () => {
                 )}
                 {/* Container contents */}
                 <div
-                  className={`absolute transition-all duration-1000 left-0 right-0 ${
+                  className={`absolute  transition-all duration-1000 left-0 right-0 ${
                     weight > 0 ? getSubstanceColor() : "bg-transparent"
                   }`}
                   style={{
@@ -490,6 +555,9 @@ const HeatingSubstancesSimulation = () => {
                   {weight <= 0 && (
                     <div className="absolute bottom-0 left-0 right-0 text-center text-xs text-gray-500 animate-fade-in py-2"></div>
                   )}
+                  {/* State indicator icon - enhanced with glow effect */}
+
+                  {/* State label - shows text description of current state */}
 
                   {/* Enhanced content rendering - only shows when there's substance left */}
                   {weight > 0 && (
@@ -560,6 +628,7 @@ const HeatingSubstancesSimulation = () => {
                   )}
               </div>
             </div>
+
             {/* Improved container stand */}
             {/* Weighing scale with digital display */}
           </div>
@@ -632,12 +701,12 @@ const HeatingSubstancesSimulation = () => {
             }
           `}</style>
         </div>
-        </div>
-        <img
-          src="male-main.png"
-          className="absolute hidden md:block h-[55vh] z-0 -bottom-0 right right-[20%]"
-          alt=""
-        />
+      </div>
+      <img
+        src="male-main.png"
+        className="absolute hidden md:block h-[55vh] z-0 -bottom-0 right right-[20%]"
+        alt=""
+      />
     </div>
   );
 };
@@ -652,6 +721,7 @@ const ControlPanel = ({
   isSealed,
   setIsSealed,
   resetSimulation,
+  recordDataPoint, // Add this parameter
 }) => {
   return (
     <div className="space-y-6 absolute md:bottom-5 bottom-5 flex justify-center items-center w-full">
@@ -704,31 +774,56 @@ const ControlPanel = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 items-center justify-center">
+        <div className="flex flex-col gap-4 items-center justify-center">
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsHeating(!isHeating)}
+              className={`flex items-center justify-center px-4 py-2 rounded ${
+                isHeating
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-blue-500 hover:bg-blue-600"
+              } text-white`}
+            >
+              {isHeating ? (
+                <>
+                  <Pause size={18} className="mr-2" /> Stop
+                </>
+              ) : (
+                <>
+                  <Play size={18} className="mr-2" /> Start
+                </>
+              )}{" "}
+              Heating
+            </button>
+            <button
+              onClick={resetSimulation}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+            >
+              Reset
+            </button>
+          </div>
+
+          {/* Record Data Button */}
           <button
-            onClick={() => setIsHeating(!isHeating)}
-            className={`flex items-center justify-center px-4 py-2 rounded ${
-              isHeating
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-blue-500 hover:bg-blue-600"
-            } text-white`}
+            onClick={recordDataPoint}
+            className="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 flex items-center justify-center w-full"
           >
-            {isHeating ? (
-              <>
-                <Pause size={18} className="mr-2" /> Stop
-              </>
-            ) : (
-              <>
-                <Play size={18} className="mr-2" /> Start
-              </>
-            )}{" "}
-            Heating
-          </button>
-          <button
-            onClick={resetSimulation}
-            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-          >
-            Reset
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="mr-2"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Record Data Point
           </button>
         </div>
       </div>

@@ -682,7 +682,6 @@ const LabysLabCoolingSubstances = () => {
                               ></div>
                             ))}
                           </div>
-
                           {/* Crystalline highlights */}
                           <div
                             className="absolute inset-0 opacity-50"
