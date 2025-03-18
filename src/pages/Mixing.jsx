@@ -10,7 +10,34 @@ const MixingSubstancesLab = () => {
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [particleColor, setParticleColor] = useState("#3b82f6"); // blue
   const [showBubbles, setShowBubbles] = useState(false);
+  const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
+  const [recordCount, setRecordCount] = useState(0);
 
+  const recordDataPoint = () => {
+    // Create a new data point with current values
+    const newDataPoint = {
+      time,
+      properties: secondSubstanceAdded
+        ? stirringSpeed > 0
+          ? "Mixed solution with bubbles"
+          : "Solution with undissolved substance"
+        : "Base solution",
+      weight: containerSealed
+        ? 100 + (Math.random() * 0.2 - 0.1) // Small random fluctuation if sealed
+        : secondSubstanceAdded && !containerSealed // Weight loss if unsealed with gas production
+        ? 100 - (time / 600) * (Math.random() * 0.1 + 0.1)
+        : 100, // No weight loss if just mixing
+      recorded: true, // Flag to indicate this is manually recorded
+    };
+
+    // Add to the dataPoints array
+    setData((prevData) => [...prevData, newDataPoint]);
+
+    // Update record count and show confirmation message
+    setRecordCount((prevCount) => prevCount + 1);
+    setShowRecordConfirmation(true);
+    setTimeout(() => setShowRecordConfirmation(false), 1500);
+  };
   // Add this state to your main component
   const [activeTab, setActiveTab] = useState(null);
 
@@ -241,24 +268,16 @@ const MixingSubstancesLab = () => {
     if (stirringSpeed <= 0) return;
 
     const timer = setInterval(() => {
-      if (stirringSpeed > 0) {
-        setTime((prev) => prev + 5);
+      if (stirringSpeed <= 0) return;
 
-        // Add data point
-        const newDataPoint = {
-          time,
-          properties: secondSubstanceAdded
-            ? "Mixed solution with bubbles"
-            : "Mixed solution",
-          weight: containerSealed
-            ? 100 + (Math.random() * 0.2 - 0.1) // Small random fluctuation if sealed
-            : secondSubstanceAdded // Weight loss if unsealed with gas production
-            ? 100 - (time / 600) * (Math.random() * 0.1 + 0.1)
-            : 100, // No weight loss if just mixing
-        };
+      const timer = setInterval(() => {
+        if (stirringSpeed > 0) {
+          setTime((prev) => prev + 5);
 
-        setData((prev) => [...prev, newDataPoint]);
-      }
+          // Remove the automatic data recording code below
+          // setData((prev) => [...prev, newDataPoint]);
+        }
+      }, 5000);
     }, 5000);
 
     return () => clearInterval(timer);
@@ -299,6 +318,7 @@ const MixingSubstancesLab = () => {
     setTime(0);
     setData([]);
     setShowBubbles(false);
+    setRecordCount(0); // Add this line to reset the record count
   };
 
   return (
@@ -317,6 +337,7 @@ const MixingSubstancesLab = () => {
             containerSealed={containerSealed}
             setContainerSealed={setContainerSealed}
             resetExperiment={resetExperiment}
+            recordDataPoint={recordDataPoint} // Add this line
           />
           {/* Tab panel */}
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">
@@ -770,6 +791,7 @@ const MixingSubstancesLab = () => {
 export default MixingSubstancesLab;
 
 // Control Panel Component
+// Modify the ControlPanel component to add recordDataPoint
 const ControlPanel = ({
   stirringSpeed,
   setStirringSpeed,
@@ -778,10 +800,11 @@ const ControlPanel = ({
   containerSealed,
   setContainerSealed,
   resetExperiment,
+  recordDataPoint, // Add this parameter
 }) => {
   return (
     <div className="space-y-6 absolute md:bottom-5 bottom-5 flex justify-center items-center w-full">
-      <div className="bg-gray-900 px-8 md:px-16 z-50 text-white p-3 rounded-lg shadow-lg flex flex-wrap justify-center items-center md:gap-10 gap-5">
+      <div className="bg-gray-900 px-8 md:px-10 z-50 text-white p-3 rounded-lg shadow-lg flex flex-wrap justify-center items-center md:gap-10 gap-5">
         {/* Stirring Speed Slider */}
         <div className="flex flex-col gap-2 justify-center items-center">
           <span className="text-blue-400 text-sm font-semibold">
@@ -866,28 +889,54 @@ const ControlPanel = ({
           </span>
         </div>
 
-        {/* Reset Button */}
+        {/* Action buttons row */}
         <div className="flex items-center justify-center">
-          <button
-            onClick={resetExperiment}
-            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <div className="flex gap-3">
+            {/* Reset Button */}
+            <button
+              onClick={resetExperiment}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center justify-center"
             >
-              <path
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              Reset
+            </button>
+            
+            {/* Record Data Button */}
+            <button
+              onClick={recordDataPoint}
+              className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-            Reset
-          </button>
+                className="mr-1"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              Record
+            </button>
+          </div>
         </div>
       </div>
     </div>

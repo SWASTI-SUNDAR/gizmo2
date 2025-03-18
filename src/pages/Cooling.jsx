@@ -30,7 +30,30 @@ const LabysLabCoolingSubstances = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [data, setData] = useState([]);
   const [showInfo, setShowInfo] = useState(false);
+  const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
+  const [recordCount, setRecordCount] = useState(0);
   // Add this state to your component
+
+  const recordDataPoint = () => {
+    // Create a new data point with current values
+    const newDataPoint = {
+      time,
+      temperature: Math.round(temperature * 10) / 10,
+      weight: Math.round(weight * 10) / 10,
+      state: getState(temperature),
+      recorded: true, // Flag to indicate manually recorded
+    };
+
+    // Add to existing data
+    setData((prevData) => [...prevData, newDataPoint]);
+
+    // Update record count and show confirmation
+    setRecordCount((prevCount) => prevCount + 1);
+    setShowRecordConfirmation(true);
+    setTimeout(() => setShowRecordConfirmation(false), 1500);
+  };
+
+
   const [activeTab, setActiveTab] = useState("description");
 
   // Render tab content function
@@ -257,17 +280,6 @@ const LabysLabCoolingSubstances = () => {
           }
           return prevWeight;
         });
-
-        // Update data points for graphs
-        setData((prevData) => {
-          const newDataPoint = {
-            time,
-            temperature,
-            weight,
-            state: getState(temperature),
-          };
-          return [...prevData, newDataPoint];
-        });
       }, 1000);
     }
 
@@ -281,6 +293,7 @@ const LabysLabCoolingSubstances = () => {
     setTemperature(10);
     setWeight(100);
     setData([]);
+    setRecordCount(0); // Reset record count
   };
 
   return (
@@ -299,6 +312,7 @@ const LabysLabCoolingSubstances = () => {
             hasLid={hasLid}
             setHasLid={setHasLid}
             resetSimulation={resetSimulation}
+            recordDataPoint={recordDataPoint} // Add this prop
           />
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">
             {["description", "table", "graph"].map((tab) => (
@@ -779,7 +793,7 @@ const LabysLabCoolingSubstances = () => {
 
             {/* State indicator icon - enhanced with glow effect */}
             <div
-              className="absolute top-2 right-2 bg-white rounded-full p-1.5 z-30"
+              className="absolute top-6 right-2 bg-white rounded-full p-1.5 z-30"
               style={{
                 boxShadow: `0 0 5px rgba(${
                   temperature <= 0 ? "150,200,255" : "100,180,255"
@@ -1010,11 +1024,12 @@ const ControlPanel = ({
   hasLid,
   setHasLid,
   resetSimulation,
+  recordDataPoint, // Add this parameter
 }) => {
   return (
     <div className="space-y-6 absolute md:bottom-5 bottom-5 flex justify-center items-center w-full">
       <div className="bg-gray-900 px-8 md:px-16 z-50 text-white p-3 rounded-lg shadow-lg flex flex-wrap justify-center items-center md:gap-10 gap-5">
-        {/* Cooling Rate Slider - REMOVED disabled attribute */}
+        {/* Cooling Rate Slider */}
         <div className="flex flex-col gap-2 justify-center items-center">
           <span className="text-blue-400 text-sm font-semibold">
             Cooling Rate
@@ -1027,13 +1042,12 @@ const ControlPanel = ({
               value={coolingRate}
               onChange={(e) => setCoolingRate(parseInt(e.target.value))}
               className="h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              // Removed the disabled attribute
             />
           </div>
           <span className="text-sm">{coolingRate}%</span>
         </div>
 
-        {/* Container Lid toggle - still disabled when running */}
+        {/* Container Lid toggle */}
         <div className="flex flex-col gap-2 justify-center items-center">
           <span className="text-blue-400 text-sm font-semibold">Container</span>
           <button
@@ -1067,32 +1081,75 @@ const ControlPanel = ({
           </span>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 items-center justify-center">
-          <button
-            onClick={() => setIsRunning(!isRunning)}
-            className={`flex items-center justify-center px-4 py-2 rounded ${
-              isRunning
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-blue-500 hover:bg-blue-600"
-            } text-white`}
-          >
-            {isRunning ? (
-              <>
-                <Pause size={18} className="mr-2" /> Pause
-              </>
-            ) : (
-              <>
-                <Play size={18} className="mr-2" /> Start
-              </>
-            )}
-          </button>
-          <button
-            onClick={resetSimulation}
-            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center justify-center"
-          >
-            Reset
-          </button>
+        {/* Action Buttons - Now all in a row */}
+        <div className="flex items-center justify-center">
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsRunning(!isRunning)}
+              className={`flex items-center justify-center px-4 py-2 rounded ${
+                isRunning
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-blue-500 hover:bg-blue-600"
+              } text-white`}
+            >
+              {isRunning ? (
+                <>
+                  <Pause size={18} className="mr-2" /> Pause
+                </>
+              ) : (
+                <>
+                  <Play size={18} className="mr-2" /> Start
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={resetSimulation}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="mr-2"
+              >
+                <path d="M3 2v6h6"></path>
+                <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
+                <path d="M21 22v-6h-6"></path>
+                <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
+              </svg>
+              Reset
+            </button>
+
+            {/* Record Data Button */}
+            <button
+              onClick={recordDataPoint}
+              className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="mr-2"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              Record Data
+            </button>
+          </div>
         </div>
       </div>
     </div>
