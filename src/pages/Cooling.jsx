@@ -30,9 +30,6 @@ const LabysLabCoolingSubstances = () => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [data, setData] = useState([]);
-  const [showInfo, setShowInfo] = useState(false);
-  const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
-  const [recordCount, setRecordCount] = useState(0);
   const { coolingData, setCoolingData } = useContext(ExperimentContext);
   // Add this state to your component
 
@@ -45,15 +42,11 @@ const LabysLabCoolingSubstances = () => {
       state: getState(temperature),
       recorded: true, // Flag to indicate manually recorded
     };
-
     // Add to existing data
     setData((prevData) => [...prevData, newDataPoint]);
     setCoolingData((prevData) => [...prevData, newDataPoint]); // Add this line
 
     // Update record count and show confirmation
-    setRecordCount((prevCount) => prevCount + 1);
-    setShowRecordConfirmation(true);
-    setTimeout(() => setShowRecordConfirmation(false), 1500);
   };
 
   const [activeTab, setActiveTab] = useState("description");
@@ -147,27 +140,25 @@ const LabysLabCoolingSubstances = () => {
                       </td>
                     </tr>
                   ) : (
-                    data
-                      .filter((_, index) => index % 5 === 0)
-                      .map((row, index) => (
-                        <tr
-                          key={index}
-                          className={index % 2 === 0 ? "bg-gray-50" : ""}
-                        >
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 border-r border-gray-200">
-                            {row.time}
-                          </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 border-r border-gray-200">
-                            {row.temperature.toFixed(1)}
-                          </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 border-r border-gray-200">
-                            {row.weight.toFixed(1)}
-                          </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 capitalize">
-                            {row.state.split(" ")[0]}
-                          </td>
-                        </tr>
-                      ))
+                    data.map((row, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 0 ? "bg-gray-50" : ""}
+                      >
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 border-r border-gray-200">
+                          {row.time}
+                        </td>
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 border-r border-gray-200">
+                          {row.temperature.toFixed(1)}
+                        </td>
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 border-r border-gray-200">
+                          {row.weight.toFixed(1)}
+                        </td>
+                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 capitalize">
+                          {row.state.split(" ")[0]}
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>
@@ -295,7 +286,6 @@ const LabysLabCoolingSubstances = () => {
     setTemperature(10);
     setWeight(100);
     setData([]);
-    setRecordCount(0); // Reset record count
   };
 
   return (
@@ -1149,7 +1139,7 @@ const ControlPanel = ({
                 <circle cx="12" cy="12" r="10"></circle>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
-              Record Data
+              Record
             </button>
           </div>
         </div>
