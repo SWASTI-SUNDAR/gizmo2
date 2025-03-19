@@ -13,7 +13,7 @@ const MixingSubstancesLab = () => {
   const [showBubbles, setShowBubbles] = useState(false);
   const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
-  
+
   const { mixingData, setMixingData } = useContext(ExperimentContext);
 
   const recordDataPoint = () => {
@@ -21,11 +21,12 @@ const MixingSubstancesLab = () => {
     const newDataPoint = {
       time,
       properties: secondSubstanceAdded
-      ? stirringSpeed > 0
-        ? "Mixed solution with bubbles"
-        : "Solution with undissolved substance"
-      : "Base solution",
-      weight: secondSubstanceAdded ? 105.2 : 100, // Increase weight slightly when the substance is added
+        ? stirringSpeed > 0
+          ? "Mixed solution with bubbles"
+          : "Solution with undissolved substance"
+        : "Base solution",
+      weight: 100, // Fixed at 100g for constant weight
+      stirringSpeed: stirringSpeed, // Add stirring speed to data
       recorded: true, // Flag to indicate this is manually recorded
     };
 
@@ -40,11 +41,10 @@ const MixingSubstancesLab = () => {
   };
   // Add this state to your main component
   const [activeTab, setActiveTab] = useState(null);
-  
+
   // Tab rendering component
   const renderTabContent = (tab) => {
     if (!activeTab || activeTab !== tab) return null;
-
     // Check if there's data to display in tables/graphs
     if ((tab === "table" || tab === "graph") && data.length === 0) {
       return (
@@ -125,6 +125,9 @@ const MixingSubstancesLab = () => {
                       Properties
                     </th>
                     <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                      Stirring (%)
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
                       Weight (g)
                     </th>
                   </tr>
@@ -142,6 +145,9 @@ const MixingSubstancesLab = () => {
                         {entry.properties}
                       </td>
                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 border-r border-gray-200">
+                        {entry.stirringSpeed || 0}
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                         {entry.weight.toFixed(2)}
                       </td>
                     </tr>
@@ -149,7 +155,7 @@ const MixingSubstancesLab = () => {
                   {data.length === 0 && (
                     <tr>
                       <td
-                        colSpan="3"
+                        colSpan="4"
                         className="px-3 py-2 text-sm text-gray-500 text-center"
                       >
                         No data yet. Start stirring to begin experiment.
@@ -276,7 +282,7 @@ const MixingSubstancesLab = () => {
 
     // Properly clean up the timer when component unmounts or dependencies change
     return () => clearInterval(timer);
-  }, [stirringSpeed]); 
+  }, [stirringSpeed]);
 
   // Effect for showing bubbles after second substance is added
   useEffect(() => {
