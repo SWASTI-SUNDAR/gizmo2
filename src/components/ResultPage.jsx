@@ -29,7 +29,7 @@ const ParameterRow = ({ label, value }) => (
 const ScienceSimulationUI = () => {
   const { heatingData, coolingData, mixingData } =
     useContext(ExperimentContext);
-  // alert("Result Page");
+  alert("Result Page");
   console.log(heatingData, coolingData, mixingData);
   // Get first recorded data point from each experiment
   const heatingEntry =
