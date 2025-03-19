@@ -63,7 +63,7 @@ const LabysLabCoolingSubstances = () => {
     if (!activeTab || activeTab !== tab) return null;
 
     // Check if there's data to display in tables/graphs
-    if ((tab === "table" || tab === "graph") && data.length <= 1) {
+    if ((tab === "table" || tab === "graph") && data.length === 0) {
       return (
         <div className="bg-white p-4 rounded-lg shadow-lg">
           No recorded data to show. Start the cooling experiment to see results.

@@ -3,7 +3,7 @@ import { ExperimentContext } from "../context/Context";
 
 const MixingSubstancesLab = () => {
   // State variables
-  const [stirringSpeed, setStirringSpeed] = useState(0);
+  const [stirringSpeed, setStirringSpeed] = useState(10);
   const [secondSubstanceAdded, setSecondSubstanceAdded] = useState(false);
   const [containerSealed, setContainerSealed] = useState(true);
   const [time, setTime] = useState(0);
@@ -21,21 +21,18 @@ const MixingSubstancesLab = () => {
     const newDataPoint = {
       time,
       properties: secondSubstanceAdded
-        ? stirringSpeed > 0
-          ? "Mixed solution with bubbles"
-          : "Solution with undissolved substance"
-        : "Base solution",
-      weight: containerSealed
-        ? 100 + (Math.random() * 0.2 - 0.1) // Small random fluctuation if sealed
-        : secondSubstanceAdded && !containerSealed // Weight loss if unsealed with gas production
-        ? 100 - (time / 600) * (Math.random() * 0.1 + 0.1)
-        : 100, // No weight loss if just mixing
+      ? stirringSpeed > 0
+        ? "Mixed solution with bubbles"
+        : "Solution with undissolved substance"
+      : "Base solution",
+      weight: secondSubstanceAdded ? 105.2 : 100, // Increase weight slightly when the substance is added
       recorded: true, // Flag to indicate this is manually recorded
     };
 
     // Add to the dataPoints array
     setData((prevData) => [...prevData, newDataPoint]);
-    setMixingData((prevData) => [...prevData, newDataPoint]); // Add this line to update context state
+    setMixingData((prevData) => [...prevData, newDataPoint]);
+
     // Update record count and show confirmation message
     setRecordCount((prevCount) => prevCount + 1);
     setShowRecordConfirmation(true);
@@ -167,7 +164,7 @@ const MixingSubstancesLab = () => {
 
       case "graph":
         return (
-          <div className="bg-white p-2 max-h-80 rounded-lg shadow-lg">
+          <div className="bg-white p-2 max-h-80 overflow-hidden rounded-lg shadow-lg">
             <h2 className="text-md font-semibold mb-1">Weight Over Time</h2>
             <div className="h-64 relative">
               <div className="absolute left-0 top-6 bottom-0 w-8 flex flex-col items-center justify-between text-xs text-gray-500">
@@ -268,23 +265,18 @@ const MixingSubstancesLab = () => {
   };
 
   useEffect(() => {
+    // Only run timer when stirring is active
     if (stirringSpeed <= 0) return;
 
+    // Create a single interval timer
     const timer = setInterval(() => {
-      if (stirringSpeed <= 0) return;
+      // Increment time by 1 second each interval
+      setTime((prevTime) => prevTime + 1);
+    }, 1000);
 
-      const timer = setInterval(() => {
-        if (stirringSpeed > 0) {
-          setTime((prev) => prev + 5);
-
-          // Remove the automatic data recording code below
-          // setData((prev) => [...prev, newDataPoint]);
-        }
-      }, 5000);
-    }, 5000);
-
+    // Properly clean up the timer when component unmounts or dependencies change
     return () => clearInterval(timer);
-  }, [stirringSpeed, time, secondSubstanceAdded, containerSealed]);
+  }, [stirringSpeed]); 
 
   // Effect for showing bubbles after second substance is added
   useEffect(() => {
@@ -314,10 +306,11 @@ const MixingSubstancesLab = () => {
     setStirringSpeed(0);
     setSecondSubstanceAdded(false);
     setContainerSealed(false);
-    setTime(0);
-    setData([]);
+    setTime(0); // Make sure time is reset to 0
+    setData([]); // Clear all data
+    setMixingData([]); // Also clear context data
     setShowBubbles(false);
-    setRecordCount(0); // Add this line to reset the record count
+    setRecordCount(0);
   };
 
   return (
