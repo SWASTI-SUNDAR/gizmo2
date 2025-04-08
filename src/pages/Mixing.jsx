@@ -15,6 +15,8 @@ const MixingSubstancesLab = () => {
   const [showBubbles, setShowBubbles] = useState(false);
   const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
+  const [weight, setWeight] = useState(100); // Starting weight for the substance
+  const [colorChangeProgress, setColorChangeProgress] = useState(0);
 
   const { mixingData, setMixingData, setMixingQuizResults } =
     useContext(ExperimentContext);
@@ -25,12 +27,15 @@ const MixingSubstancesLab = () => {
       time,
       properties: secondSubstanceAdded
         ? stirringSpeed > 0
-          ? "Mixed solution with bubbles"
+          ? containerSealed
+            ? "Mixed solution with bubbles (sealed)"
+            : "Mixed solution with escaping gas"
           : "Solution with undissolved substance"
         : "Base solution",
-      weight: 100, // Fixed at 100g for constant weight
+      weight: weight, // Use current weight instead of fixed value
       stirringSpeed: stirringSpeed, // Add stirring speed to data
       recorded: true, // Flag to indicate this is manually recorded
+      containerState: containerSealed ? "Sealed" : "Open",
     };
 
     // Add to the dataPoints array
@@ -42,6 +47,40 @@ const MixingSubstancesLab = () => {
     setShowRecordConfirmation(true);
     setTimeout(() => setShowRecordConfirmation(false), 1500);
   };
+  useEffect(() => {
+    // Only run when we have a reaction happening (second substance added and stirring)
+    if (secondSubstanceAdded && stirringSpeed > 0) {
+      // If container is open, weight should decrease as gas escapes
+      if (!containerSealed) {
+        const weightLossInterval = setInterval(() => {
+          setWeight((prevWeight) => {
+            // Gradually reduce weight based on stirring speed, but don't go below 99.5g
+            const newWeight = Math.max(
+              99.5,
+              prevWeight - stirringSpeed * 0.0001
+            );
+            return Number(newWeight.toFixed(2)); // Keep to 2 decimal places
+          });
+        }, 500);
+
+        return () => clearInterval(weightLossInterval);
+      }
+    }
+  }, [secondSubstanceAdded, stirringSpeed, containerSealed]);
+
+  // Effect to handle color change progress
+  useEffect(() => {
+    if (secondSubstanceAdded && stirringSpeed > 0) {
+      // Gradually increase color change progress when stirring with second substance
+      const colorChangeInterval = setInterval(() => {
+        setColorChangeProgress((prev) =>
+          Math.min(100, prev + stirringSpeed * 0.05)
+        );
+      }, 100);
+
+      return () => clearInterval(colorChangeInterval);
+    }
+  }, [secondSubstanceAdded, stirringSpeed]);
   // Add this state to your main component
   const [activeTab, setActiveTab] = useState(null);
 
@@ -272,7 +311,7 @@ const MixingSubstancesLab = () => {
         return null;
     }
   };
-
+ 
   useEffect(() => {
     // Only run timer when stirring is active
     if (stirringSpeed <= 0) return;
@@ -320,6 +359,8 @@ const MixingSubstancesLab = () => {
     setMixingData([]); // Also clear context data
     setShowBubbles(false);
     setRecordCount(0);
+    setWeight(100); // Reset weight to initial value
+    setColorChangeProgress(0); // Reset color transition progress
   };
   const handleQuizComplete = (results) => {
     console.log("Quiz completed with results:", results);
@@ -328,6 +369,33 @@ const MixingSubstancesLab = () => {
 
     // Save quiz results to context
     setMixingQuizResults(results);
+  };
+  const getSolutionColor = () => {
+    if (!secondSubstanceAdded) {
+      return "rgba(210, 235, 255, 0.75)"; // Clear water
+    }
+
+    if (secondSubstanceAdded && stirringSpeed === 0) {
+      return "rgba(210, 235, 255, 0.75)"; // Still clear when powder just added
+    }
+
+    if (stirringSpeed > 0) {
+      // Determine color based on container state and mixing progress
+      if (containerSealed) {
+        // In sealed container, transition to purple color as reaction progresses
+        const r = Math.floor(59 + (colorChangeProgress / 100) * (147 - 59));
+        const g = Math.floor(130 - (colorChangeProgress / 100) * 110);
+        const b = Math.floor(246 - (colorChangeProgress / 100) * (246 - 196));
+        return `rgba(${r}, ${g}, ${b}, ${0.3 + (stirringSpeed / 100) * 0.4})`;
+      } else {
+        // In open container, transition to green as before
+        return `rgba(16, ${185 - stirringSpeed * 0.7}, 129, ${
+          0.3 + (stirringSpeed / 100) * 0.4
+        })`;
+      }
+    }
+
+    return "rgba(59, 130, 246, 0.3)"; // Default blue color
   };
   return (
     <div
@@ -404,17 +472,7 @@ const MixingSubstancesLab = () => {
                   className="absolute bottom-0 left-0 right-0 transition-all duration-1000 rounded-b-lg overflow-hidden"
                   style={{
                     height: "80%",
-                    backgroundColor: !secondSubstanceAdded
-                      ? "rgba(210, 235, 255, 0.75)" // Clear water
-                      : secondSubstanceAdded && stirringSpeed === 0
-                      ? "rgba(210, 235, 255, 0.75)" // Still clear water when powder just added
-                      : stirringSpeed > 0
-                      ? `rgba(${
-                          secondSubstanceAdded
-                            ? `16, ${185 - stirringSpeed * 0.7}, 129` // Green transition based on stirring
-                            : `59, 130, 246`
-                        }, ${0.3 + (stirringSpeed / 100) * 0.4})`
-                      : "rgba(59, 130, 246, 0.3)",
+                    backgroundColor: getSolutionColor(),
                     transition: "background-color 2s, opacity 2s",
                   }}
                 >
