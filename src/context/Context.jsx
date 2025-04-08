@@ -6,9 +6,13 @@ export const ExperimentContext = createContext();
 // Provider Component
 export const ExperimentProvider = ({ children }) => {
   const [heatingData, setHeatingData] = useState([]);
-  const [coolingData,setCoolingData] = useState([]);
+  const [coolingData, setCoolingData] = useState([]);
   const [mixingData, setMixingData] = useState([]);
 
+  // Add states for quiz results
+  const [heatingQuizResults, setHeatingQuizResults] = useState([]);
+  const [coolingQuizResults, setCoolingQuizResults] = useState([]);
+  const [mixingQuizResults, setMixingQuizResults] = useState([]);
   return (
     <ExperimentContext.Provider
       value={{
@@ -17,7 +21,13 @@ export const ExperimentProvider = ({ children }) => {
         coolingData,
         setCoolingData,
         mixingData,
-        setMixingData
+        setMixingData,
+        heatingQuizResults,
+        setHeatingQuizResults,
+        coolingQuizResults,
+        setCoolingQuizResults,
+        mixingQuizResults,
+        setMixingQuizResults,
       }}
     >
       {children}

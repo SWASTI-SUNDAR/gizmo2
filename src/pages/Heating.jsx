@@ -20,6 +20,8 @@ import {
 } from "recharts";
 import { useContext } from "react";
 import { ExperimentContext } from "../context/Context";
+import QuizComponent from "../components/Quiz";
+import { heatingQuestions } from "../data/QuestionsData";
 
 const HeatingSubstancesSimulation = () => {
   // State variables
@@ -35,7 +37,8 @@ const HeatingSubstancesSimulation = () => {
 
   const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
-  const { heatingData, setHeatingData } = useContext(ExperimentContext);
+  const { heatingData, setHeatingData, setHeatingQuizResults } =
+    useContext(ExperimentContext);
   // First, add this state near your other state variables in HeatingSubstancesSimulation
   const [activeTab, setActiveTab] = useState("status");
 
@@ -388,7 +391,14 @@ const HeatingSubstancesSimulation = () => {
 
     return particles;
   };
+  const handleQuizComplete = (results) => {
+    console.log("Quiz completed with results:", results);
+    const correctAnswers = results.filter((result) => result === true).length;
+    console.log(`Score: ${correctAnswers}/${results.length}`);
 
+    // Save quiz results to context
+    setHeatingQuizResults(results);
+  };
   return (
     <div
       style={{ backgroundImage: "url(page-first-bg.png)" }}
@@ -407,7 +417,11 @@ const HeatingSubstancesSimulation = () => {
             resetSimulation={resetSimulation}
             recordDataPoint={recordDataPoint} // Add this line
           />
-
+          <QuizComponent
+            title="Labby Lab 2: Heating Substances – Conserving Weight"
+            questions={heatingQuestions}
+            onComplete={handleQuizComplete}
+          />
           {/* Tabs */}
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">
             {["description", "table", "graph"].map((tab) => (

@@ -20,6 +20,8 @@ import {
   Play,
 } from "lucide-react";
 import { ExperimentContext } from "../context/Context";
+import QuizComponent from "../components/Quiz";
+import { coolingQuestions } from "../data/QuestionsData";
 
 const LabysLabCoolingSubstances = () => {
   // State variables
@@ -30,7 +32,8 @@ const LabysLabCoolingSubstances = () => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [data, setData] = useState([]);
-  const { coolingData, setCoolingData } = useContext(ExperimentContext);
+  const { coolingData, setCoolingData, setCoolingQuizResults } =
+    useContext(ExperimentContext);
   // Add this state to your component
 
   const recordDataPoint = () => {
@@ -287,7 +290,14 @@ const LabysLabCoolingSubstances = () => {
     setWeight(100);
     setData([]);
   };
+  const handleQuizComplete = (results) => {
+    console.log("Quiz completed with results:", results);
+    const correctAnswers = results.filter((result) => result === true).length;
+    console.log(`Score: ${correctAnswers}/${results.length}`);
 
+    // Save quiz results to context
+    setCoolingQuizResults(results);
+  };
   return (
     <div
       style={{ backgroundImage: "url(page-two-bg.png)" }}
@@ -305,6 +315,11 @@ const LabysLabCoolingSubstances = () => {
             setHasLid={setHasLid}
             resetSimulation={resetSimulation}
             recordDataPoint={recordDataPoint} // Add this prop
+          />
+          <QuizComponent
+            title="Labby Lab 2: Cooling Substances – Freezing and Weight Conservation"
+            questions={coolingQuestions}
+            onComplete={handleQuizComplete}
           />
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">
             {["description", "table", "graph"].map((tab) => (

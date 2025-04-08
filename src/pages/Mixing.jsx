@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { ExperimentContext } from "../context/Context";
+import QuizComponent from "../components/Quiz";
+import { mixingQuestions } from "../data/QuestionsData";
 
 const MixingSubstancesLab = () => {
   // State variables
@@ -14,7 +16,8 @@ const MixingSubstancesLab = () => {
   const [showRecordConfirmation, setShowRecordConfirmation] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
 
-  const { mixingData, setMixingData } = useContext(ExperimentContext);
+  const { mixingData, setMixingData, setMixingQuizResults } =
+    useContext(ExperimentContext);
 
   const recordDataPoint = () => {
     // Create a new data point with current values
@@ -318,7 +321,14 @@ const MixingSubstancesLab = () => {
     setShowBubbles(false);
     setRecordCount(0);
   };
+  const handleQuizComplete = (results) => {
+    console.log("Quiz completed with results:", results);
+    const correctAnswers = results.filter((result) => result === true).length;
+    console.log(`Score: ${correctAnswers}/${results.length}`);
 
+    // Save quiz results to context
+    setMixingQuizResults(results);
+  };
   return (
     <div
       style={{ backgroundImage: "url(page-three-bg.png)" }}
@@ -336,6 +346,11 @@ const MixingSubstancesLab = () => {
             setContainerSealed={setContainerSealed}
             resetExperiment={resetExperiment}
             recordDataPoint={recordDataPoint} // Add this line
+          />
+          <QuizComponent
+            title="Labby Lab 2: Heating Substances – Conserving Weight"
+            questions={mixingQuestions}
+            onComplete={handleQuizComplete}
           />
           {/* Tab panel */}
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">
@@ -788,8 +803,7 @@ const MixingSubstancesLab = () => {
 
 export default MixingSubstancesLab;
 
-// Control Panel Component
-// Modify the ControlPanel component to add recordDataPoint
+
 const ControlPanel = ({
   stirringSpeed,
   setStirringSpeed,
