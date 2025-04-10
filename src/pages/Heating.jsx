@@ -60,7 +60,7 @@ const HeatingSubstancesSimulation = () => {
         return (
           <div className="bg-white max-h-80 p-3 rounded-lg overflow-y-scroll shadow-lg">
             <h2 className="text-xl font-semibold mb-3">
-              States of Matter Simulation
+              Laby’s Lab 1: Heating Substances – Conserving Weight
             </h2>
             <p className="mb-2">
               This simulation demonstrates how matter changes between solid,
@@ -418,9 +418,10 @@ const HeatingSubstancesSimulation = () => {
             recordDataPoint={recordDataPoint} // Add this line
           />
           <QuizComponent
-            title="Laby's Lab 2: Heating Substances – Conserving Weight"
+            title="Laby’s Lab 1: Heating Substances – Conserving Weight"
             questions={heatingQuestions}
             onComplete={handleQuizComplete}
+            startIndex={0}
           />
           {/* Tabs */}
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">

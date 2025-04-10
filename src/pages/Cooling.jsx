@@ -72,7 +72,8 @@ const LabysLabCoolingSubstances = () => {
         return (
           <div className="bg-white max-h-80 p-3 rounded-lg overflow-y-scroll shadow-lg">
             <h2 className="text-xl font-semibold mb-3">
-              Cooling and States of Matter Simulation
+              Laby’s Lab 2: Cooling Substances – Freezing and
+              Weight Conservation
             </h2>
             <p className="mb-2">
               This simulation demonstrates how water changes state when cooled
@@ -317,8 +318,9 @@ const LabysLabCoolingSubstances = () => {
             recordDataPoint={recordDataPoint} // Add this prop
           />
           <QuizComponent
-            title="Laby's Lab 2: Cooling Substances – Freezing and Weight Conservation"
+            title="Laby’s Lab 2: Cooling Substances – Freezing and Weight Conservation"
             questions={coolingQuestions}
+            startIndex={3}
             onComplete={handleQuizComplete}
           />
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">

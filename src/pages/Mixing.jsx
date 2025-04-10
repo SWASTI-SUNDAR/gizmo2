@@ -82,7 +82,7 @@ const MixingSubstancesLab = () => {
     }
   }, [secondSubstanceAdded, stirringSpeed]);
   // Add this state to your main component
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState("description");
 
   // Tab rendering component
   const renderTabContent = (tab) => {
@@ -101,7 +101,7 @@ const MixingSubstancesLab = () => {
         return (
           <div className="bg-white max-h-80 p-3 rounded-lg overflow-y-scroll shadow-lg">
             <h2 className="text-xl font-semibold mb-3">
-              Mixing Substances Simulation
+              Laby’s Lab 3 : Mixing Substances - Observing New Properties
             </h2>
             <p className="mb-2">
               This simulation demonstrates how substances mix together and how
@@ -416,9 +416,10 @@ const MixingSubstancesLab = () => {
             recordDataPoint={recordDataPoint} // Add this line
           />
           <QuizComponent
-            title="Laby's Lab 2: Mixing Substances Simulation"
+            title="Laby’s Lab 3 : Mixing Substances - Observing New Properties"
             questions={mixingQuestions}
             onComplete={handleQuizComplete}
+            startIndex={6}
           />
           {/* Tab panel */}
           <div className="md:absolute hidden md:block md:top-12 md:w-80 bg-white p-2 md:p-4 rounded-lg shadow-lg space-y-2">
