@@ -46,7 +46,7 @@ function Navbar() {
           {/* Left Section */}
           <div className="flex gap-0 xl:gap-6 items-center text-white">
             <Link to="/" className="text-xl font-bold text-yellow-400">
-              Labby's Labs : Matter Conservation Explorer
+              Laby's Labs : Matter Conservation Explorer
             </Link>
           </div>
           {/* Navigation Buttons */}

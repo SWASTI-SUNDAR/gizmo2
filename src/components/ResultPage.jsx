@@ -194,7 +194,7 @@ const ScienceSimulationUI = () => {
         />
         <div>
           <h1 className="text-xl font-bold text-center text-gray-800 mb-8">
-            Labby's Lab Report
+            Laby's Lab Report
           </h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-7">

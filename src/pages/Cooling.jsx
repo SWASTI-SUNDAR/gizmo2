@@ -317,7 +317,7 @@ const LabysLabCoolingSubstances = () => {
             recordDataPoint={recordDataPoint} // Add this prop
           />
           <QuizComponent
-            title="Labby Lab 2: Cooling Substances – Freezing and Weight Conservation"
+            title="Laby's Lab 2: Cooling Substances – Freezing and Weight Conservation"
             questions={coolingQuestions}
             onComplete={handleQuizComplete}
           />

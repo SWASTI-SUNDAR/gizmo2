@@ -418,7 +418,7 @@ const HeatingSubstancesSimulation = () => {
             recordDataPoint={recordDataPoint} // Add this line
           />
           <QuizComponent
-            title="Labby Lab 2: Heating Substances – Conserving Weight"
+            title="Laby's Lab 2: Heating Substances – Conserving Weight"
             questions={heatingQuestions}
             onComplete={handleQuizComplete}
           />

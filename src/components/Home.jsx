@@ -23,7 +23,7 @@ const Home = () => {
         />
         <Link to="/heating">
           <button className="absolute md:bottom-[3%] left-[40%] right-[40%] bottom-20 md:left-[45%] md:right-[45%] p-4 hover:scale-95 duration-300 text-white bg-black rounded-xl">
-            Labby’s Lab
+            Laby’s Lab
           </button>
         </Link>
       </div>
