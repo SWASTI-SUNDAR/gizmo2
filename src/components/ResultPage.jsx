@@ -6,7 +6,82 @@ import {
   CardContent,
 } from "../components/ui/card";
 import { ExperimentContext } from "../context/Context";
+const ScoreCard = () => {
+  const { userResponse } = useContext(ExperimentContext);
 
+  // Calculate scores directly from the userResponse array
+  // Gas questions: indices 0-2
+  const heatingQuizResults = userResponse
+    .slice(0, 3)
+    .filter((response) => response === 1).length;
+  const gasTotal = 3;
+
+  // Evaporation questions: indices 3-5
+  const coolingQuizResults = userResponse
+    .slice(3, 6)
+    .filter((response) => response === 1).length;
+  const evaporationTotal = 3;
+
+  // Dissolving questions: indices 6-8
+  const mixingQuizResults = userResponse
+    .slice(6, 9)
+    .filter((response) => response === 1).length;
+  const dissolvingTotal = 3;
+
+  // Calculate unattempted questions
+  const unattempted = userResponse.filter((response) => response === 0).length;
+
+  // Calculate total percentage
+  const totalScore =
+    heatingQuizResults + coolingQuizResults + mixingQuizResults;
+  const totalQuestions = userResponse.length;
+  const totalPercentage =
+    totalQuestions > 0
+      ? Math.round((totalScore / (totalQuestions - unattempted)) * 100)
+      : 0;
+  useEffect(() => {
+    console.log("User Response Array:", userResponse);
+    console.log("Total Percentage", totalPercentage);
+  }, [userResponse]);
+  return (
+    <div className="w-96 mx-auto bg-white rounded-xl shadow-md p-6">
+      <div className="border-b pb-2 mb-4">
+        <h2 className="text-lg font-semibold">Your score</h2>
+      </div>
+      <div className="space-y-2">
+        <div className="flex justify-between">
+          <span className="text-gray-700">Gases</span>
+          <span className="text-black font-medium">
+            {heatingQuizResults}/{gasTotal}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">Evaporation</span>
+          <span className="text-black font-medium">
+            {coolingQuizResults}/{evaporationTotal}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-700">Dissolving Solids</span>
+          <span className="text-black font-medium">
+            {mixingQuizResults}/{dissolvingTotal}
+          </span>
+        </div>
+        <div className="flex justify-between pt-2 border-t mt-4">
+          <span className="text-sky-600 font-semibold">Total</span>
+          <span className="text-sky-600 font-semibold">{totalPercentage}%</span>
+        </div>
+
+        {unattempted > 0 && (
+          <div className="flex justify-between pt-2 text-amber-600">
+            <span>Unattempted questions:</span>
+            <span>{unattempted}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 const ExperimentCard = ({ title, color, children }) => (
   <Card className="bg-white rounded-lg shadow-md">
     <CardHeader>
@@ -109,7 +184,7 @@ const ScienceSimulationUI = () => {
   return (
     <div
       style={{ backgroundImage: "url(result-page-bg.png)" }}
-      className="w-full bg-no-repeat bg-bottom bg-cover pt-24 h-screen overflow-y-auto"
+      className="w-full bg-no-repeat bg-bottom bg-cover pt-24 h-screen overflow-hidden"
     >
       <div className="max-w-6xl relative h-full mx-auto">
         <img
@@ -122,7 +197,7 @@ const ScienceSimulationUI = () => {
             Labby's Lab Report
           </h1>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-7">
           <div className="col-span-1">
             <ExperimentCard title="Heating Experiment" color="bg-pink-500">
               <ParameterRow
@@ -156,11 +231,6 @@ const ScienceSimulationUI = () => {
                 />
               )}
             </ExperimentCard>
-            <QuizResultsCard
-              title="Heating"
-              color="bg-pink-500"
-              results={heatingQuizResults}
-            />
           </div>
 
           <div className="col-span-1">
@@ -186,11 +256,6 @@ const ScienceSimulationUI = () => {
                 value={coolingEntry ? `${coolingEntry.weight} g` : "100 g"}
               />
             </ExperimentCard>
-            <QuizResultsCard
-              title="Cooling"
-              color="bg-cyan-500"
-              results={coolingQuizResults}
-            />
           </div>
 
           <div className="col-span-1">
@@ -226,6 +291,13 @@ const ScienceSimulationUI = () => {
               results={mixingQuizResults}
             />
           </div>
+        </div>
+        <div className="md:col-span-3 w-full flex justify-center">
+          <ScoreCard
+            heatingQuizResults={heatingQuizResults}
+            coolingQuizResults={coolingQuizResults}
+            mixingQuizResults={mixingQuizResults}
+          />
         </div>
       </div>
     </div>
